@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="project" default="default">
+	<description>log4j 1.2.15に対するSysLog拡張</description>
+
+	<property name="work.dir" value="work"/>
+	<property name="log4j.in.jar" value="log4j-1.2.15.jar"/>
+	<property name="log4j.out.jar" value="log4j-1.2.15-extend.jar"/>
+	
+	<target name="default" description="">
+
+		<delete dir="${work.dir}"/>
+		<mkdir dir="${work.dir}"/>
+
+		<javac srcdir="src" destdir="${work.dir}" encoding="UTF-8" debug="true">
+			<classpath>
+				<fileset dir="lib">
+					<include name="**/*.jar"/>
+				</fileset>
+			</classpath>
+		</javac>
+
+		<copy file="lib/${log4j.in.jar}" tofile="${log4j.out.jar}" overwrite="true"/>
+
+		<jar destfile="${log4j.out.jar}" update="true" duplicate="add">
+			<fileset dir="${work.dir}">
+				<include name="**/*"/>
+			</fileset>
+		</jar>
+		
+	</target>
+
+</project>

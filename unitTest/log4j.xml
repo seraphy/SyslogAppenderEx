@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+	<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+		<param name="Threshold" value="trace"/>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %5p %c{1} - %m%n"/>
+		</layout>
+	</appender>
+	
+	<!--
+		syslogへUDPによる送信のためのアペンダ定義、ログレベルとsyslogサーバの設定.
+		syslogアペンダを使用するためには、syslogが514/UDPを受け入れるように設定されていなければなりません。
+		RHELの場合、/etc/sysconfig/syslog　の SYSLOGD_OPTIONS に以下のように -r を追加してください。
+		SYSLOGD_OPTIONS="-m 0 -r"
+	 -->
+	<appender name="SYSLOG" class="org.apache.log4j.log4jextend.net.SyslogAppenderEx">
+
+		<!-- syslogデーモンに送信する文字コード -->
+		<param name="Encoding" value="UTF-8"/>
+
+		<!-- syslogに例外スタックトレースを送信できるか?
+		  falseの場合は常にスタックトレースは送信しない -->
+		<param name="IgnoreThrowable" value="true"/>
+
+		<param name="Facility" value="local0"/>
+		<param name="SyslogHost" value="192.168.1.160"/>
+		<param name="Header" value="true"/>
+		<param name="Threshold" value="error"/>
+
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %5p [LOG4JEXT:%c{1}](user:%x)- %m%n"/>
+		</layout>
+	</appender>
+
+	<logger name="org.apache.log4j.log4jextend.net">
+		<appender-ref ref="SYSLOG"/>
+	</logger>
+
+	<root>
+	</root>
+
+</log4j:configuration>
